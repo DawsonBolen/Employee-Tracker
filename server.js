@@ -8,12 +8,12 @@ const db = mysql.createConnection(
         // MySQL Username
         user: 'root',
         // TODO: Add MySQL Password
-        password: '',
+        password: 'Icecream*129',
         database: 'employee_db'
     },
 );
 
-async function handleOptions() {
+async function mainMenu() {
     const options = [
         'View all Departments',
         'View all Roles',
@@ -31,61 +31,24 @@ async function handleOptions() {
         choices: options,
     }]);
     if (results.command == 'View all Departments') {
-        displayDepartments();
-        handleOptions();
+        await displayDepartments();
     } else if (results.command == 'View all Roles') {
-        displayRoles();
-        handleOptions();
+        await displayRoles();
+
     } else if (results.command == 'View all Employees') {
-        displayEmployees();
-        handleOptions();
+        await displayEmployees();
+
     } else if (results.command == 'Add a Department') {
-        inquirer.prompt([
-            {
-                message: 'enter the department name',
-                name: 'name',
-                type: 'input',
-            }
-        ]).then((departmentData) => {
-            addDepartment(departmentData);
-            handleOptions();
-        });
+        await addDepartment();
 
     } else if (results.command == 'Add a Role') {
-        inquirer.prompt([
-            {
-                message: 'enter the role name',
-                name: 'name',
-                type: 'input',
-            }
-        ]).then((roleData) => {
-            addRole(roleData);
-            handleOptions();
-        });
+        await addRole();
 
     } else if (results.command == 'Add an Employee') {
-        inquirer.prompt([
-            {
-                message: 'enter employee name',
-                name: 'name',
-                type: 'input',
-            }
-        ]).then((employeeData) => {
-            addEmployee(employeeData);
-            handleOptions();
-        });
+        await addEmployee();
 
     } else if (results.command == 'Update Employee Role') {
-        inquirer.prompt([
-            {
-                message: 'enter employee name and new role',
-                name: 'name',
-                type: 'input',
-            }
-        ]).then((updatedRoleData) => {
-            updateEmployee(updatedRoleData);
-            handleOptions();
-        });
+        await updateEmployeeRole();
     } else {
         console.log('error');
     }
@@ -93,27 +56,142 @@ async function handleOptions() {
 }
 
 
-
-function displayDepartments(results) {
-    connection.query(
-        'SELECT * FROM `table` WHERE `name` = "Page" AND `age` > 45',
-        function (err, results, fields) {
-            console.log(results); // results contains rows returned by server
-            console.log(fields); // fields contains extra meta data about results, if available
-        }
-    );
+async function displayDepartments() {
+    const [departmentData, departmentFields] = await db.promise().query("Select * FROM department")
+    console.log(departmentData)
+    mainMenu();
 }
 
-function addDepartment() {
-    connection.query('INSERT INTO employees SET ?', employee, (err, results) => {
-        if (err) {
-            console.error('Error inserting data:', err);
-            return;
-        }
-        console.log('Data inserted successfully!');
-        console.log('Inserted row ID:', results.insertId);
-    });
 
+async function displayRoles() {
+    const query = "select role.id, role.title, role.salary, department.name FROM role JOIN department ON role.department_id = department.id"
+    const [roleData, roleFields] = await db.promise().query(query)
+    console.log(roleData)
+    mainMenu();
 }
 
-handleOptions();
+async function displayEmployees() {
+    const query = `
+    SELECT employee.id, employee.name, role.salary, department.name AS department
+    FROM employee
+    LEFT JOIN role ON employee.role_id = role.id
+    LEFT JOIN department ON role.department_id = department.id
+  `
+    const [employeeData, employeeFields] = await db.promise().query(query)
+    console.log(employeeData);
+    mainMenu();
+}
+
+
+
+async function addDepartment() {
+    const departmentInfo = await inquirer.prompt([
+        {
+            message: 'enter the department title',
+            name: 'title',
+            type: 'input',
+        }
+    ]);
+    console.log(departmentInfo);
+
+    const { title } = departmentInfo;
+    const query = 'INSERT INTO department (title, department_id) VALUES (?, ?)';
+    const values = [title, department_id];
+
+    try {
+        await db.promise().query(query, values);
+        console.log('new department added successfully');
+    } catch (error) {
+        console.error('Error inserting new department:', error);
+    }
+
+    mainMenu();
+}
+
+async function addRole() {
+    const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
+    console.log(departmentInfo)
+    const roleInfo = await inquirer.prompt([
+        {
+            message: 'enter the role title',
+            name: 'title',
+            type: 'input',
+        },
+        {
+            message: 'enter the role salary',
+            name: 'salary',
+            type: 'input',
+        },
+        {
+            message: "Pick the department",
+            name: "department_id",
+            choices: departmentInfo
+        }
+    ]);
+    console.log(roleInfo);
+
+    const { title, salary, department_id } = roleInfo;
+
+    const query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+    const values = [title, salary, department_id];
+
+    try {
+        await db.promise().query(query, values);
+        console.log('New role added successfully!');
+    } catch (error) {
+        console.error('Error inserting new role:', error);
+    }
+
+    mainMenu();
+}
+
+async function addEmployee() {
+    const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
+
+    const employeeInfo = await inquirer.prompt([
+        {
+            message: 'enter employee first name',
+            name: 'firstname',
+            type: 'input',
+        },
+        {
+            message: 'enter employee last name',
+            name: 'lastname',
+            type: 'input',
+        },
+        {
+            message: 'enter employee role',
+            name: 'role',
+            type: 'input',
+        },
+        {
+            message: 'enter employee\'s manager',
+            name: 'manager',
+            type: 'input',
+        },
+        {
+            message: "Pick the department",
+            name: "department_id",
+            choices: departmentInfo
+        }
+    ]);
+    console.log(employeeInfo);
+
+    const { firstname, lastname, role, manager, department_id } = employeeInfo;
+
+    const query = 'INSERT INTO employee (firstname, lastname, role, manager, department_id VALUES(?, ?, ?, ?, ?))';
+
+    const values = [firstname, lastname, role, manager, department_id];
+
+    try {
+        await db.promise.query(query, values);
+        console.log('new employee added successfully');
+    } catch (error) {
+        console.error('Error inserting new employee:', error);
+    }
+
+    mainMenu();
+}
+
+
+mainMenu();
