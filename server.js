@@ -9,7 +9,7 @@ const db = mysql.createConnection(
         user: 'root',
         // TODO: Add MySQL Password
         password: 'Icecream*129',
-        database: 'employee_db'
+        database: 'employee_db',
     },
 );
 
@@ -95,8 +95,8 @@ async function addDepartment() {
     console.log(departmentInfo);
 
     const { title } = departmentInfo;
-    const query = 'INSERT INTO department (title, department_id) VALUES (?, ?)';
-    const values = [title, department_id];
+    const query = 'INSERT INTO department (title) VALUES (?)';
+    const values = [title];
 
     try {
         await db.promise().query(query, values);
@@ -111,6 +111,12 @@ async function addDepartment() {
 async function addRole() {
     const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
     console.log(departmentInfo)
+
+    const departmentChoices = departmentInfo.map((department) => ({
+        name: department.title,
+        value: department.id,
+    }));
+
     const roleInfo = await inquirer.prompt([
         {
             message: 'enter the role title',
@@ -125,8 +131,8 @@ async function addRole() {
         {
             message: "Pick the department",
             name: "department_id",
-            choices: departmentInfo
-        }
+            choices: departmentChoices,
+        },
     ]);
     console.log(roleInfo);
 

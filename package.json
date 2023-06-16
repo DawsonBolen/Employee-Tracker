@@ -20,6 +20,6 @@
   "homepage": "https://github.com/DawsonBolen/Employee-Tracker#readme",
   "dependencies": {
     "inquirer": "^8.2.4",
-    "mysql2": "^3.3.4"
+    "mysql2": "^2.3.3"
   }
 }
