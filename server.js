@@ -131,6 +131,7 @@ async function addRole() {
         {
             message: "Pick the department",
             name: "department_id",
+            type: 'list',
             choices: departmentChoices,
         },
     ]);
@@ -185,7 +186,7 @@ async function addEmployee() {
 
     const { firstname, lastname, role, manager, department_id } = employeeInfo;
 
-    const query = 'INSERT INTO employee (firstname, lastname, role, manager, department_id VALUES(?, ?, ?, ?, ?))';
+    const query = 'INSERT INTO employee (firstname, lastname, role, manager, department_id) VALUES (?, ?, ?, ?, ?)';
 
     const values = [firstname, lastname, role, manager, department_id];
 
