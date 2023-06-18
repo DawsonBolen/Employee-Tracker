@@ -9,7 +9,7 @@ const db = mysql.createConnection(
         user: 'root',
         // TODO: Add MySQL Password
         password: 'Icecream*129',
-        database: 'employee_db',
+        database: 'employees_db',
     },
 );
 
@@ -154,7 +154,8 @@ async function addRole() {
 
 async function addEmployee() {
     const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
-
+    const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
+    const [managerInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
     const employeeInfo = await inquirer.prompt([
         {
             message: 'enter employee first name',
@@ -169,12 +170,14 @@ async function addEmployee() {
         {
             message: 'enter employee role',
             name: 'role',
-            type: 'input',
+            type: 'list',
+            choices: roleInfo
         },
         {
             message: 'enter employee\'s manager',
             name: 'manager',
-            type: 'input',
+            type: 'list',
+            choices: managerInfo
         },
         {
             message: "Pick the department",
@@ -191,10 +194,47 @@ async function addEmployee() {
     const values = [firstname, lastname, role, manager, department_id];
 
     try {
-        await db.promise.query(query, values);
+        await db.promise().query(query, values);
         console.log('new employee added successfully');
     } catch (error) {
         console.error('Error inserting new employee:', error);
+    }
+
+    mainMenu();
+}
+
+async function updateEmployeeRole() {
+    const [employeeInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
+
+    const chosenEmployee = await inquirer.prompt([
+        {
+            message: 'Choose the employee that you want to update',
+            name: 'employee',
+            type: 'list',
+            choices: employeeInfo
+        },
+    ]);
+    const { employeeId } = chosenEmployee.employee;
+    const { roleId } = updatedRole.role;
+    const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
+
+    const updatedRole = await inquirer.prompt([
+        {
+            message: 'Choose a new role for this employee',
+            name: 'role',
+            type: 'list',
+            choices: roleInfo
+        }
+    ]);
+
+    const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
+    const values = [roleId, employeeId];
+
+    try {
+        await db.promise().query(query, values);
+        console.log('employee role updated successfully');
+    } catch (error) {
+        console.error('error updating employee info', error);
     }
 
     mainMenu();

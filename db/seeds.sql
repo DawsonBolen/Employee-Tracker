@@ -1,16 +1,20 @@
 -- Insert data into the department table
 INSERT INTO department (name) VALUES
-    ("DepartmentA"),
-    ("DepartmentB"),
-    ("DepartmentC");
+    ("Recieving"),
+    ("Management"),
+    ("Management"),
+    ("Front End"),
+    ("Lawn and garden");
 SELECT * FROM department;
 -- Insert data into the role table
 INSERT INTO role (title, salary, department_id) VALUES
-    ("Role1", 50000, 1),
-    ("Role2", 60000, 2),
-    ("Role3", 70000, 3);
+    ("Cashier", 50000, 4),
+    ("Head Cashier", 60000, 4),
+    ("Sales Associate", 60000, 5),
+    ("Assistant Manager", 70000, 2);
 SELECT * FROM role;
 
 INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES
-('mike', 'anderson', 1, NULL),
-('ryan', 'bolen', 2, 1);
+('mike', 'anderson', 2, NULL),
+('mike', 'anderson', 2, 1),
+('kevin', 'smith', 2, 1);
