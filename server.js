@@ -187,11 +187,11 @@ async function addEmployee() {
     ]);
     console.log(employeeInfo);
 
-    const { firstname, lastname, role, manager, department_id } = employeeInfo;
+    const { firstname, lastname, role_id, manager, department_id } = employeeInfo;
 
     const query = 'INSERT INTO employee (firstname, lastname, role, manager, department_id) VALUES (?, ?, ?, ?, ?)';
 
-    const values = [firstname, lastname, role, manager, department_id];
+    const values = [firstname, lastname, role_id, manager, department_id];
 
     try {
         await db.promise().query(query, values);
