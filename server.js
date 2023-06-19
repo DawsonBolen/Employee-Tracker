@@ -72,7 +72,6 @@ async function displayRoles() {
 
 async function displayEmployees() {
 
-
     const query = `
     SELECT employee.id, employee.firstname, employee.lastname, role.title AS role, role.salary, department.name AS department
     FROM employee
@@ -157,20 +156,20 @@ async function addRole() {
 
 async function addEmployee() {
     const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
-    const [managerInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
+    const [employeeInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
 
     const roleChoices = roleInfo.map((role) => ({
         name: role.title,
         value: role.id,
     }));
 
-    const managerChoices = managerInfo.map((manager) => ({
-        name: `${manager.firstname} ${manager.lastname}`,
-        value: manager.id,
+    const managerChoices = employeeInfo.map((employee) => ({
+        name: `${employee.firstname} ${employee.lastname}`,
+        value: employee.id,
     }));
 
 
-    const employeeInfo = await inquirer.prompt([
+    const employeeData = await inquirer.prompt([
         {
             message: 'enter employee first name',
             name: 'firstname',
@@ -194,13 +193,15 @@ async function addEmployee() {
             choices: managerChoices
         }
     ]);
-    console.log(employeeInfo);
+    console.log(employeeData);
 
-    const { firstname, lastname, role_id, manager_id } = employeeInfo;
+    const { firstname, lastname, role_id, manager_id } = employeeData;
 
     const query = 'INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES (?, ?, ?, ?)';
 
     const values = [firstname, lastname, role_id, manager_id];
+
+
 
     try {
         await db.promise().query(query, values);
