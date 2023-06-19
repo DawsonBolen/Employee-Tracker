@@ -156,6 +156,17 @@ async function addEmployee() {
     const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
     const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
     const [managerInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
+
+    const roleChoices = roleInfo.map((role) => ({
+        name: role.title,
+        value: role.id,
+    }));
+
+    const managerChoices = managerInfo.map((manager) => ({
+        name: `${manager.firstname} ${manager.lastname}`,
+        value: manager.id,
+    }));
+
     const employeeInfo = await inquirer.prompt([
         {
             message: 'enter employee first name',
@@ -171,13 +182,13 @@ async function addEmployee() {
             message: 'enter employee role',
             name: 'role',
             type: 'list',
-            choices: roleInfo
+            choices: roleChoices
         },
         {
             message: 'enter employee\'s manager',
             name: 'manager',
             type: 'list',
-            choices: managerInfo
+            choices: managerChoices
         },
         {
             message: "Pick the department",
