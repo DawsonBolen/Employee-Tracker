@@ -66,22 +66,12 @@ async function displayDepartments() {
 async function displayRoles() {
     const query = "select role.id, role.title, role.salary, department.name FROM role JOIN department ON role.department_id = department.id"
     const [roleData, roleFields] = await db.promise().query(query)
-    console.log(roleData)
+    console.log(roleData);
     mainMenu();
 }
 
 async function displayEmployees() {
-    //     const query = `
-    //     SELECT employee.id, employee.firstname, employee.lastname, role.salary, department.name AS department
-    //     FROM employee
-    //     LEFT JOIN role ON employee.role_id = role.id
-    //     LEFT JOIN department ON role.department_id = department.id
-    //   `
 
-    // const query = 'SELECT employee.id, employee.firstname, employee.lastname, role.salary, department.name AS department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id'
-    // const [employeeData, employeeFields] = await db.promise().query(query)
-    // console.log(employeeData);
-    // mainMenu();
 
     const query = `
     SELECT employee.id, employee.firstname, employee.lastname, role.title AS role, role.salary, department.name AS department
@@ -92,6 +82,7 @@ async function displayEmployees() {
 
     const [employeeData, employeeFields] = await db.promise().query(query);
     console.log(employeeData);
+    mainMenu();
 }
 
 
