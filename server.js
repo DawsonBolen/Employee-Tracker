@@ -193,6 +193,7 @@ async function addEmployee() {
         {
             message: "Pick the department",
             name: "department_id",
+            type: 'list',
             choices: departmentInfo
         }
     ]);
@@ -200,7 +201,7 @@ async function addEmployee() {
 
     const { firstname, lastname, role_id, manager, department_id } = employeeInfo;
 
-    const query = 'INSERT INTO employee (firstname, lastname, role, manager, department_id) VALUES (?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO employee (firstname, lastname, role_id, manager, department_id) VALUES (?, ?, ?, ?, ?)';
 
     const values = [firstname, lastname, role_id, manager, department_id];
 
@@ -217,12 +218,22 @@ async function addEmployee() {
 async function updateEmployeeRole() {
     const [employeeInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
 
+    const roleChoices = roleInfo.map((role) => ({
+        name: role.title,
+        value: role.id,
+    }));
+
+    const employeeChoices = managerInfo.map((manager) => ({
+        name: `${manager.firstname} ${manager.lastname}`,
+        value: manager.id,
+    }));
+
     const chosenEmployee = await inquirer.prompt([
         {
             message: 'Choose the employee that you want to update',
             name: 'employee',
             type: 'list',
-            choices: employeeInfo
+            choices: employeeChoices
         },
     ]);
     const { employeeId } = chosenEmployee.employee;
@@ -234,7 +245,7 @@ async function updateEmployeeRole() {
             message: 'Choose a new role for this employee',
             name: 'role',
             type: 'list',
-            choices: roleInfo
+            choices: roleChoices
         }
     ]);
 

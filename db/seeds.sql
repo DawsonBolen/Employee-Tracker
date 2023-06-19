@@ -2,7 +2,7 @@
 INSERT INTO department (name) VALUES
     ("Recieving"),
     ("Management"),
-    ("Management"),
+    ("Paint"),
     ("Front End"),
     ("Lawn and garden");
 SELECT * FROM department;
@@ -16,5 +16,5 @@ SELECT * FROM role;
 
 INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES
 ('mike', 'anderson', 2, NULL),
-('mike', 'anderson', 2, 1),
+('Kate', 'miller', 2, 1),
 ('kevin', 'smith', 2, 1);
