@@ -88,7 +88,7 @@ async function addDepartment() {
     const departmentInfo = await inquirer.prompt([
         {
             message: 'enter the department title',
-            name: 'title',
+            name: 'name',
             type: 'input',
         }
     ]);
@@ -113,8 +113,8 @@ async function addRole() {
     console.log(departmentInfo)
 
     const departmentChoices = departmentInfo.map((department) => ({
-        name: department.title,
-        value: department.id,
+        name: department.name,
+        value: department.id
     }));
 
     const roleInfo = await inquirer.prompt([
