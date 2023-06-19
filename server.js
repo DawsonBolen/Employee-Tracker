@@ -153,7 +153,7 @@ async function addRole() {
 }
 
 async function addEmployee() {
-    const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
+    //const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
     const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
     const [managerInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
 
@@ -167,10 +167,7 @@ async function addEmployee() {
         value: manager.id,
     }));
 
-    const departmentChoices = departmentInfo.map((department) => ({
-        name: `${department.name}`,
-        value: department.id,
-    }));
+
 
 
     const employeeInfo = await inquirer.prompt([
@@ -195,21 +192,15 @@ async function addEmployee() {
             name: 'manager',
             type: 'list',
             choices: managerChoices
-        },
-        {
-            message: "Pick the department",
-            name: "department_id",
-            type: 'list',
-            choices: departmentChoices
         }
     ]);
     console.log(employeeInfo);
 
-    const { firstname, lastname, role_id, manager_id, department_id } = employeeInfo;
+    const { firstname, lastname, role_id, manager_id } = employeeInfo;
 
-    const query = 'INSERT INTO employee (firstname, lastname, role_id, manager_id, department_id) VALUES (?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES (?, ?, ?, ?, ?)';
 
-    const values = [firstname, lastname, role_id, manager_id, parseInt(department_id)];
+    const values = [firstname, lastname, role_id, manager_id];
 
     try {
         await db.promise().query(query, values);
