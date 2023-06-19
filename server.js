@@ -156,7 +156,6 @@ async function addRole() {
 }
 
 async function addEmployee() {
-    //const [departmentInfo, departmentFields] = await db.promise().query("SELECT * FROM department");
     const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
     const [managerInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
 
@@ -169,8 +168,6 @@ async function addEmployee() {
         name: `${manager.firstname} ${manager.lastname}`,
         value: manager.id,
     }));
-
-
 
 
     const employeeInfo = await inquirer.prompt([
@@ -217,17 +214,17 @@ async function addEmployee() {
 
 async function updateEmployeeRole() {
     const [employeeInfo, employeeFields] = await db.promise().query("SELECT * FROM employee");
+    const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
 
     const roleChoices = roleInfo.map((role) => ({
         name: role.title,
         value: role.id,
     }));
 
-    const employeeChoices = managerInfo.map((manager) => ({
-        name: `${manager.firstname} ${manager.lastname}`,
-        value: manager.id,
+    const employeeChoices = employeeInfo.map((employee) => ({
+        name: `${employee.firstname} ${employee.lastname}`,
+        value: employee.id,
     }));
-
     const chosenEmployee = await inquirer.prompt([
         {
             message: 'Choose the employee that you want to update',
@@ -237,8 +234,8 @@ async function updateEmployeeRole() {
         },
     ]);
     const { employeeId } = chosenEmployee.employee;
-    const { roleId } = updatedRole.role;
-    const [roleInfo, roleFields] = await db.promise().query("SELECT * FROM role");
+
+
 
     const updatedRole = await inquirer.prompt([
         {
@@ -249,6 +246,7 @@ async function updateEmployeeRole() {
         }
     ]);
 
+    const { roleId } = updatedRole.role;
     const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
     const values = [roleId, employeeId];
 
