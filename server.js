@@ -233,7 +233,8 @@ async function updateEmployeeRole() {
             choices: employeeChoices
         },
     ]);
-    const { employeeId } = chosenEmployee.employee;
+    const employeeId = chosenEmployee.employee;
+
 
 
 
@@ -246,7 +247,7 @@ async function updateEmployeeRole() {
         }
     ]);
 
-    const { roleId } = updatedRole.role;
+    const roleId = updatedRole.role;
     const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
     const values = [roleId, employeeId];
 
