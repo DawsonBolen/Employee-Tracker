@@ -167,6 +167,12 @@ async function addEmployee() {
         value: manager.id,
     }));
 
+    const departmentChoices = departmentInfo.map((department) => ({
+        name: `${department.name}`,
+        value: department.id,
+    }));
+
+
     const employeeInfo = await inquirer.prompt([
         {
             message: 'enter employee first name',
@@ -194,7 +200,7 @@ async function addEmployee() {
             message: "Pick the department",
             name: "department_id",
             type: 'list',
-            choices: departmentInfo
+            choices: departmentChoices
         }
     ]);
     console.log(employeeInfo);
