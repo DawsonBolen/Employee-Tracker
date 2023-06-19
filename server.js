@@ -9,7 +9,7 @@ const db = mysql.createConnection(
         user: 'root',
         // TODO: Add MySQL Password
         password: 'Icecream*129',
-        database: 'employees_db',
+        database: 'employees_db'
     },
 );
 
@@ -94,9 +94,9 @@ async function addDepartment() {
     ]);
     console.log(departmentInfo);
 
-    const { title } = departmentInfo;
-    const query = 'INSERT INTO department (title) VALUES (?)';
-    const values = [title];
+    const { name } = departmentInfo;
+    const query = 'INSERT INTO department (name) VALUES (?)';
+    const values = [name];
 
     try {
         await db.promise().query(query, values);
