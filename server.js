@@ -209,7 +209,7 @@ async function addEmployee() {
 
     const query = 'INSERT INTO employee (firstname, lastname, role_id, manager_id, department_id) VALUES (?, ?, ?, ?, ?)';
 
-    const values = [firstname, lastname, role_id, manager_id, department_id];
+    const values = [firstname, lastname, role_id, manager_id, parseInt(department_id)];
 
     try {
         await db.promise().query(query, values);
