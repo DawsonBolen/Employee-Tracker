@@ -195,12 +195,10 @@ async function addEmployee() {
     ]);
     console.log(employeeData);
 
-    const { firstname, lastname, role_id, manager_id } = employeeData;
+    const { firstname, lastname, role, manager } = employeeData;
 
     const query = 'INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES (?, ?, ?, ?)';
-
-    const values = [firstname, lastname, role_id, manager_id];
-
+    const values = [firstname, lastname, role, manager];
 
 
     try {
